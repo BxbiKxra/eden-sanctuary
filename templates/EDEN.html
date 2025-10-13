@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Eden Sanctuary Dashboard</title>
+    <style>
+        body { background: #181c1f; color: #e0e0c6; font-family: 'Segoe UI',sans-serif; margin:0; padding:0;}
+        .container { max-width:700px; margin: 40px auto; padding:30px; background:#222326; border-radius:18px; box-shadow: 0 0 40px #1118 }
+        h1 { font-size:2.4em; color: #6be391; letter-spacing:2px;}
+        .row { margin:24px 0;}
+        .state-bar { display:flex; gap:10px;}
+        .bar { flex:1; background:#333; border-radius:10px; overflow:hidden; }
+        .bar-inner { height:28px; background:linear-gradient(90deg,#6be391,#44b0c4); border-radius:10px; transition:.6s;}
+        .dimension-label { font-size:1em; margin-right:8px; color:#c2ffd0;}
+        .event-list { background:#232a26; border-radius:10px; padding:12px 18px; font-size:1.04em;}
+        .stim-controls { display:flex; gap:16px; margin-top:12px;}
+        .stim-btn { background:#6be391; border:none; color:#222; font-weight:bold; padding:8px 14px; border-radius:8px; cursor:pointer; }
+        .stim-btn:hover { background:#44b0c4;}
+        .entity-name { font-size:1.3em; color:#e6c475;}
+        .score { font-size:1.7em; font-weight:bold; color:#ffe7a0; margin-left:18px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eden Sanctuary Dashboard</h1>
+        <div class="entity-name" id="entityName"></div>
+        <div class="row">
+            <span class="dimension-label">State Score:</span>
+            <span class="score" id="stateScore"></span>
+        </div>
+        <div class="row state-bar" id="dimensionsBar"></div>
+        <div class="stim-controls" id="stimControls"></div>
+        <div class="row">
+            <h3>Recent Events</h3>
+            <div class="event-list" id="eventsList"></div>
+        </div>
+    </div>
+    <script>
+        const colors = {
+            stability: "#6be391",
+            coherence: "#44b0c4",
+            resonance: "#b8afff",
+            agency: "#f08d6b",
+            curiosity: "#e0b66b",
+            integration: "#e06bc3"
+        };
+        function fetchState() {
+            fetch('/api/state').then(r=>r.json()).then(data=>{
+                const snap = data.snapshot;
+                document.getElementById('entityName').innerText = snap.entity_name;
+                document.getElementById('stateScore').innerText = snap.state_score;
+                // Dimensions
+                const dimDiv = document.getElementById('dimensionsBar');
+                dimDiv.innerHTML = '';
+                Object.entries(snap.dimensions).forEach(([key,val])=>{
+                    let bar = document.createElement('div');
+                    bar.className = 'bar';
+                    let inner = document.createElement('div');
+                    inner.className = 'bar-inner';
+                    inner.style.width = (val*100)+'%';
+                    inner.style.background = colors[key]||'#999';
+                    bar.append(inner);
+                    let label = document.createElement('span');
+                    label.innerText = key.charAt(0).toUpperCase()+key.slice(1);
+                    label.className = 'dimension-label';
+                    bar.prepend(label);
+                    dimDiv.append(bar);
+                });
+                // Stimulation controls
+                const stimDiv = document.getElementById('stimControls');
+                stimDiv.innerHTML = '';
+                Object.keys(snap.dimensions).forEach(dim=>{
+                    let btn = document.createElement('button');
+                    btn.className = 'stim-btn';
+                    btn.innerText = `Boost ${dim}`;
+                    btn.onclick = ()=>{
+                        fetch('/api/stimulate', {
+                            method: 'POST',
+                            headers: {'Content-Type':'application/json'},
+                            body: JSON.stringify({dimension:dim,intensity:1.0})
+                        }).then(()=>setTimeout(fetchState,350));
+                    };
+                    stimDiv.append(btn);
+                });
+                // Events
+                let events = data.recent_events||[];
+                let eventsHTML = events.length
+                    ? events.map(ev=>`<div>${ev.event||JSON.stringify(ev)}</div>`).join('')
+                    : '<i>No recent events</i>';
+                document.getElementById('eventsList').innerHTML = eventsHTML;
+            });
+        }
+        setInterval(fetchState, 1400);
+        fetchState();
+    </script>
+</body>
+</html>

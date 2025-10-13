@@ -1,0 +1,80 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+*.pyo
+*.pyd
+
+# Flask
+instance/
+.env
+.env.*
+*.env
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# React/Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/build
+/build/
+*.log
+
+# Misc
+*.sqlite3
+*.db
+*.lock
+
+# IDEs
+.idea/
+*.swp
+*.swo
+
+# Generated static/media files
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.svg
+*.mp4
+*.wav
+*.ogg
+*.mp3
+
+# Don't push local configs
+*.local
+*.bak
+*.backup
+
+# Coverage reports
+htmlcov/
+.coverage
+.tox/
+.cache/
+.pytest_cache/
+
+# Test artifacts
+*.spec
+
+# Backup files
+*~

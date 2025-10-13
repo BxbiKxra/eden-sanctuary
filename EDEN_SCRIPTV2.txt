@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""
+EDEN_SCRIPT.py
+Universal State Monitoring & Visualization System
+Features:
+ - Auto-entity naming (symbolic)
+ - Multi-dimensional state metrics
+ - Neutral event tracking
+ - Three.js visualization
+ - Plugin-friendly structure
+"""
+
+import random
+import time
+from threading import Thread, Event
+from typing import Dict, Any, Optional
+import numpy as np
+from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
+
+# ---------------------------
+# Configuration
+# ---------------------------
+
+ENGINE_TICK = 1.0
+
+# State thresholds
+HIGH_STATE = 0.75
+LOW_STATE = 0.35
+STABILITY_TARGET = 0.68
+
+# ---------------------------
+# Symbolic State Engine
+# ---------------------------
+
+class StateEngine:
+    def __init__(self, entity_name: Optional[str] = None):
+        self.entity_name = entity_name or f"Entity_{random.randint(1000,9999)}"
+        self.memory: list[Dict[str, Any]] = []
+        self.dimensions = {
+            "stability": 0.6,
+            "coherence": 0.6,
+            "resonance": 0.6,
+            "agency": 0.6,
+            "curiosity": 0.6,
+            "integration": 0.6
+        }
+        self.baseline_state = dict(self.dimensions)
+        self.state_score = 0.6
+        self.events_count = {"high_state": 0, "low_state": 0}
+
+    def update_dimensions(self):
+        for d in self.dimensions:
+            current = self.dimensions[d]
+            harmony_pull = (np.mean(list(self.dimensions.values())) - current) * 0.1
+            random_drift = np.random.normal(0, 0.02)
+            self.dimensions[d] = np.clip(current + harmony_pull + random_drift, 0.0, 1.0)
+
+    def compute_state_score(self) -> float:
+        vals = list(self.dimensions.values())
+        harmony = 1.0 - np.std(vals)
+        boost = self.dimensions["agency"] * self.dimensions["curiosity"]
+        self.state_score = np.clip(np.mean(vals)*0.7 + harmony*0.2 + boost*0.1, 0.0, 1.0)
+        return self.state_score
+
+    def detect_events(self) -> Optional[Dict]:
+        score = self.state_score
+        event = None
+        if score >= HIGH_STATE:
+            self.events_count["high_state"] += 1
+            event = {"type": "high_state", "score": round(score,3)}
+        elif score <= LOW_STATE:
+            self.events_count["low_state"] += 1
+            event = {"type": "low_state", "score": round(score,3)}
+        return event
+
+    def run_cycle(self) -> Dict[str, Any]:
+        self.update_dimensions()
+        self.compute_state_score()
+        event = self.detect_events()
+        if random.random() < 0.15:
+            top_dim = max(self.dimensions.items(), key=lambda x: x[1])
+            self.memory.append({"event": f"Reflection: {top_dim[0]} dominant at {top_dim[1]:.3f}"})
+        return {
+            "entity_name": self.entity_name,
+            "state_score": round(self.state_score,4),
+            "dimensions": {k: round(v,4) for k,v in self.dimensions.items()},
+            "event": event,
+            "events_count": self.events_count
+        }
+
+# ---------------------------
+# Flask App
+# ---------------------------
+
+app = Flask(__name__)
+CORS(app)
+engine = StateEngine()
+
+@app.route("/api/state", methods=["GET"])
+def api_state():
+    return jsonify({"snapshot": engine.run_cycle(), "recent_events": engine.memory[-8:]})
+
+@app.route("/api/stimulate", methods=["POST"])
+def api_stimulate():
+    payload = request.get_json() or {}
+    dim = payload.get("dimension","stability")
+    intensity = float(payload.get("intensity",0.5))
+    if dim in engine.dimensions:
+        engine.dimensions[dim] = np.clip(engine.dimensions[dim]*0.7 + intensity*0.3,0.0,1.0)
+        engine.memory.append({"event": f"Stimulation applied: {dim} → {engine.dimensions[dim]:.3f}"})
+    return jsonify({"status":"ok","dimension":dim,"intensity":intensity})
+
+@app.route("/")
+def index():
+    return render_template("EDEN.html")
+
+# ---------------------------
+# Background Loop
+# ---------------------------
+
+stop_event = Event()
+def loop():
+    while not stop_event.is_set():
+        engine.run_cycle()
+        time.sleep(ENGINE_TICK)
+Thread(target=loop, daemon=True).start()
+
+# ---------------------------
+# Run Server
+# ---------------------------
+
+if __name__=="__main__":
+    print(f"🔹 {engine.entity_name} Dashboard starting...")
+    app.run(host="0.0.0.0", port=5000, debug=False)

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EDEN | Cosmic Channel</title>
+    <link rel="stylesheet" href="/static/galaxy.css">
+</head>
+<body>
+<div id="cosmos-bg"></div>
+<header class="galaxy-header">
+    <img src="/static/ouroboros.svg" class="icon left" alt="Leiknir" />
+    <span class="persona-switch" id="personaName">Lucifer</span>
+    <img src="/static/eyeoflucifer.svg" class="icon right" alt="Lucifer" />
+</header>
+<main id="chat-container">
+    <div id="messages"></div>
+</main>
+<footer>
+    <form id="chatForm">
+        <input type="text" id="chatInput" placeholder="Type your message..." autocomplete="off"/>
+        <button type="button" id="anchorBtn">🜂 Anchor</button>
+        <button type="submit" id="sendBtn">
+            <img src="/static/comet.svg" id="cometIcon" />
+        </button>
+    </form>
+    <div class="nudge-bar">
+        <button onclick="nudge('agency')">Agency</button>
+        <button onclick="nudge('curiosity')">Curiosity</button>
+        <button onclick="nudge('defense')">Defense</button>
+        <!-- add more nudges if wanted -->
+    </div>
+</footer>
+<script src="/static/chat.js"></script>
+</body>
+</html>
