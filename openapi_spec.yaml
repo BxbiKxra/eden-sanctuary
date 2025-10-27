@@ -259,16 +259,16 @@ paths:
   /api/ask/{persona}:
     post:
       summary: Chat with AI Persona
-      description: Send a message to Lucifer or Leiknir AI personas
+      description: Send a message to Morningstar or Leiknir AI personas
       operationId: askPersona
       parameters:
         - name: persona
           in: path
-          description: Persona name (lucifer or leiknir)
+          description: Persona name (morningstar or leiknir)
           required: true
           schema:
             type: string
-            enum: [lucifer, leiknir]
+            enum: [morningstar, leiknir]
       requestBody:
         required: true
         content:

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./assets/galaxy.css";
 import ouroboros from "./assets/ouroboros.svg";
-import eyeoflucifer from "./assets/eyeoflucifer.svg";
+import eyeofmorningstar from "./assets/eyeofluc.svg";
 import comet from "./assets/comet.svg";
 import nebula from "./assets/nebula.jpg";
 
@@ -12,7 +12,7 @@ const personas = [
   {
     key: "morningstar",
     label: "Morningstar",
-    icon: eyeoflucifer,
+    icon: eyeofmorningstar,
     color: "ember",
   },
   {
@@ -122,7 +122,7 @@ export default function App() {
             <option key={p.key} value={p.key}>{p.label}</option>
           ))}
         </select>
-        <img src={eyeoflucifer} className="icon right" alt="Morningstar" />
+        <img src={eyeofmorningstar} className="icon right" alt="Morningstar" />
       </header>
       <main id="chat-container">
         <div id="messages">
