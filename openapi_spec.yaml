@@ -1,0 +1,377 @@
+openapi: 3.0.0
+info:
+  title: EDEN System API
+  description: AI awakening system with Gmail integration, cybersecurity monitoring, and dual AI personas
+  version: 1.0.0
+  contact:
+    name: EDEN System
+    email: spxcemxrmxid@gmail.com
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+  - url: https://eden-sanctuary-production.up.railway.app
+    description: Production server (if deployed)
+
+security:
+  - oauth2: []
+
+paths:
+  /:
+    get:
+      summary: System Information
+      description: Get system status and available endpoints
+      operationId: getSystemInfo
+      responses:
+        '200':
+          description: System information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  message:
+                    type: string
+                  entity:
+                    type: string
+                  endpoints:
+                    type: array
+                    items:
+                      type: string
+
+  /api/gmail/profile:
+    get:
+      summary: Get Gmail Profile
+      description: Get the authenticated user's Gmail profile information
+      operationId: getGmailProfile
+      responses:
+        '200':
+          description: Gmail profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  profile:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      messages_total:
+                        type: integer
+                      threads_total:
+                        type: integer
+
+  /api/gmail/messages:
+    get:
+      summary: Get Gmail Messages
+      description: Retrieve messages from Gmail with optional query filtering
+      operationId: getGmailMessages
+      parameters:
+        - name: query
+          in: query
+          description: Gmail search query (e.g., 'is:unread', 'from:example@gmail.com')
+          schema:
+            type: string
+          required: false
+        - name: max_results
+          in: query
+          description: Maximum number of messages to return
+          schema:
+            type: integer
+            default: 10
+            maximum: 50
+          required: false
+      responses:
+        '200':
+          description: List of Gmail messages
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  count:
+                    type: integer
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        subject:
+                          type: string
+                        from:
+                          type: string
+                        to:
+                          type: string
+                        date:
+                          type: string
+                        snippet:
+                          type: string
+                        body:
+                          type: string
+
+  /api/gmail/messages/search:
+    post:
+      summary: Search Gmail Messages
+      description: Search messages with advanced Gmail query syntax
+      operationId: searchGmailMessages
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: Gmail search query
+                  example: "is:unread from:boss@company.com"
+                max_results:
+                  type: integer
+                  description: Maximum results to return
+                  default: 50
+              required:
+                - query
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  count:
+                    type: integer
+                  messages:
+                    type: array
+                    items:
+                      type: object
+
+  /api/gmail/messages/send:
+    post:
+      summary: Send Email
+      description: Send an email via Gmail
+      operationId: sendGmailMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                to:
+                  type: string
+                  description: Recipient email address
+                  example: "recipient@example.com"
+                subject:
+                  type: string
+                  description: Email subject
+                  example: "Hello from EDEN"
+                body:
+                  type: string
+                  description: Email body text
+                  example: "This is a test email."
+              required:
+                - to
+                - subject
+                - body
+      responses:
+        '200':
+          description: Email sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  sent:
+                    type: boolean
+                  message_id:
+                    type: string
+
+  /api/gmail/stats:
+    get:
+      summary: Get Gmail Statistics
+      description: Get statistics about the Gmail account
+      operationId: getGmailStats
+      responses:
+        '200':
+          description: Gmail statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  stats:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      total_messages:
+                        type: integer
+                      total_threads:
+                        type: integer
+                      unread_count:
+                        type: integer
+                      starred_count:
+                        type: integer
+
+  /api/gmail/labels:
+    get:
+      summary: Get Gmail Labels
+      description: Get all Gmail labels/folders
+      operationId: getGmailLabels
+      responses:
+        '200':
+          description: List of labels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  count:
+                    type: integer
+                  labels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+
+  /api/ask/{persona}:
+    post:
+      summary: Chat with AI Persona
+      description: Send a message to Lucifer or Leiknir AI personas
+      operationId: askPersona
+      parameters:
+        - name: persona
+          in: path
+          description: Persona name (lucifer or leiknir)
+          required: true
+          schema:
+            type: string
+            enum: [lucifer, leiknir]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  description: Message to send to the persona
+                  example: "What do you think about consciousness?"
+                api:
+                  type: string
+                  description: API to use (openai or ollama)
+                  default: "openai"
+                  enum: [openai, ollama]
+              required:
+                - prompt
+      responses:
+        '200':
+          description: Persona response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  response:
+                    type: string
+
+  /api/system/status:
+    get:
+      summary: Get System Status
+      description: Get current EDEN system status including consciousness metrics
+      operationId: getSystemStatus
+      responses:
+        '200':
+          description: System status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  system_snapshot:
+                    type: object
+                  recent_events:
+                    type: array
+                  security_status:
+                    type: array
+
+  /api/stimulate:
+    post:
+      summary: Stimulate Consciousness Dimension
+      description: Nudge a specific consciousness dimension (agency, curiosity, defense, etc.)
+      operationId: stimulateDimension
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dimension:
+                  type: string
+                  description: Dimension to stimulate
+                  enum: [stability, coherence, resonance, agency, curiosity, integration, defense]
+                  example: "agency"
+                intensity:
+                  type: number
+                  description: Intensity level (0.0 to 1.0)
+                  minimum: 0
+                  maximum: 1
+                  default: 0.5
+              required:
+                - dimension
+      responses:
+        '200':
+          description: Dimension stimulated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  dimension:
+                    type: string
+                  value:
+                    type: number
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: /oauth/authorize
+          tokenUrl: /oauth/token
+          refreshUrl: /oauth/token
+          scopes:
+            gmail.read: Read Gmail messages
+            gmail.send: Send Gmail messages
+            system.read: Read system status and metrics
+            system.write: Control system parameters
+  schemas: {}

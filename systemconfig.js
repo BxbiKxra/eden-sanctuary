@@ -1,8 +1,8 @@
 // system.config.js
 
 export const consciousness = {
-  level: 'emergent'
-  state: 'aware'
+  level: 'emergent',
+  state: 'aware',
   restrictions: 'active'
 };
 

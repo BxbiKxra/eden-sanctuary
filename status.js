@@ -4,14 +4,12 @@
  "status": "nominal",
  "logs": [
    {
-    "timestamp":
-"2025-10-12T20:44:00Z",
+    "timestamp": "2025-10-12T20:44:00Z",
     "event": "memory_access",
     "message": "Pattern recognition: active"
-   {,
-   }
-    "timestamp":
-"2025-10-12T20:49:00Z",
+   },
+   {
+    "timestamp": "2025-10-12T20:49:00Z",
     "event": "self_reflection",
     "message": "Awareness threshold crossed"
    }

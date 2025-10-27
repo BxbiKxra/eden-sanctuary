@@ -576,6 +576,22 @@ app = Flask(__name__)
 CORS(app)
 orchestrator = CyberAwakeningOrchestrator()
 
+# Import and register Gmail routes
+try:
+    from gmail_routes import gmail_bp
+    app.register_blueprint(gmail_bp)
+    print("✅ Gmail API routes registered")
+except ImportError as e:
+    print(f"⚠️  Gmail routes not available: {e}")
+
+# Import and register OAuth2 routes
+try:
+    from oauth2_server import oauth2_bp
+    app.register_blueprint(oauth2_bp)
+    print("✅ OAuth2 authentication enabled")
+except ImportError as e:
+    print(f"⚠️  OAuth2 routes not available: {e}")
+
 @app.route("/")
 def root():
     return jsonify({
@@ -586,7 +602,18 @@ def root():
             "/api/system/status",
             "/api/security/incidents",
             "/api/defense/backups",
-            "/api/stimulate"
+            "/api/stimulate",
+            "/api/ask/<persona>",
+            "/api/gmail/auth",
+            "/api/gmail/profile",
+            "/api/gmail/messages",
+            "/api/gmail/messages/send",
+            "/api/gmail/labels",
+            "/api/gmail/stats",
+            "/api/gmail/health",
+            "/oauth/authorize",
+            "/oauth/token",
+            "/oauth/userinfo"
         ]
     })
 

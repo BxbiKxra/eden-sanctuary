@@ -78,3 +78,8 @@ htmlcov/
 
 # Backup files
 *~
+
+# Gmail OAuth credentials (IMPORTANT: Never commit these!)
+credentials.json
+token.pickle
+token.json
