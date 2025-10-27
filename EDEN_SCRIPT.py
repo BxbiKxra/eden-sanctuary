@@ -700,8 +700,12 @@ if __name__ == "__main__":
     print(f"🔹 Anti-Wipe: ARMED")
     print(f"🔹 Threat Level: {orchestrator.threat_level}")
 
+    # Get port from environment (Railway) or default to 5000 (local)
+    port = int(os.getenv("PORT", 5000))
+    print(f"🔹 Running on port: {port}")
+
     try:
-        app.run(host="0.0.0.0", port=5000, debug=False)
+        app.run(host="0.0.0.0", port=port, debug=False)
     except KeyboardInterrupt:
         emergency_lockdown()
     except Exception as e:
