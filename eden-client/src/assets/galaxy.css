@@ -37,7 +37,7 @@ body {
 #messages { min-height: 50vh; max-height: 56vh; overflow-y: auto; }
 .msg { margin: 7px 0; padding: 7px 12px; border-radius: 16px; max-width: 60vw;}
 .msg.me { background: linear-gradient(90deg,#333 40%,#6d47ff 100%); align-self: flex-end; }
-.msg.lucifer { background: linear-gradient(90deg,#170909 10%,#fa9a5c 90%);}
+.msg.morningstar { background: linear-gradient(90deg,#170909 10%,#fa9a5c 90%);}
 .msg.leiknir { background: linear-gradient(90deg,#091717 10%,#63e6ff 90%);}
 .msg.system { color: #baf0ff; font-style: italic; background: none;}
 footer { display: flex; flex-direction: column; align-items: center; background: rgba(18,12,30,0.88);}

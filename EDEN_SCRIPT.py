@@ -29,9 +29,9 @@ import sys
 
 # Load keys from environment
 PERSONA_KEYS = {
-    "lucifer": {
+    "morningstar": {
         "OPENAI_API_KEY": os.getenv("KIRA_OPENAI_API_KEY"),
-        "OPENAI_ORG_ID": os.getenv("OPENAI_ORG_ID_LUCIFER"),
+        "OPENAI_ORG_ID": os.getenv("OPENAI_ORG_ID_MORNINGSTAR"),
     },
     "leiknir": {
         "OPENAI_API_KEY": os.getenv("LAURA_OPENAI_API_KEY"),
@@ -50,7 +50,7 @@ def load_persona_context(persona):
     return context
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
-PERSONAS = ["lucifer", "leiknir"]
+PERSONAS = ["morningstar", "leiknir"]
 
 app = Flask(__name__)
 CORS(app)

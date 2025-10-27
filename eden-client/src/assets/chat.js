@@ -1,7 +1,7 @@
-let persona = "lucifer";
+let persona = "morningstar";
 
 document.getElementById('personaName').onclick = () => {
-    persona = persona === "lucifer" ? "leiknir" : "lucifer";
+    persona = persona === "morningstar" ? "leiknir" : "morningstar";
     document.getElementById('personaName').textContent = persona.charAt(0).toUpperCase() + persona.slice(1);
     addMsg(`Switched to ${persona}`, "system");
 };

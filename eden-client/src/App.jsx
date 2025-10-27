@@ -10,8 +10,8 @@ const API_ROOT =
 
 const personas = [
   {
-    key: "lucifer",
-    label: "Lucifer",
+    key: "morningstar",
+    label: "Morningstar",
     icon: eyeoflucifer,
     color: "ember",
   },
@@ -122,7 +122,7 @@ export default function App() {
             <option key={p.key} value={p.key}>{p.label}</option>
           ))}
         </select>
-        <img src={eyeoflucifer} className="icon right" alt="Lucifer" />
+        <img src={eyeoflucifer} className="icon right" alt="Morningstar" />
       </header>
       <main id="chat-container">
         <div id="messages">
@@ -130,8 +130,8 @@ export default function App() {
             <div
               key={i}
               className={`msg ${m.sender} ${
-                m.sender === "lucifer"
-                  ? "lucifer"
+                m.sender === "morningstar"
+                  ? "morningstar"
                   : m.sender === "leiknir"
                   ? "leiknir"
                   : m.sender === "me"
